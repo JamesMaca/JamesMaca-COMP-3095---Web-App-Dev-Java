@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+  product-service:
+    image: product-service
+    ports:
+      - "8084:8084"
+    build:
+      context: ./product-service
+      dockerfile: ./Dockerfile
+    container_name: product-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - mongodb
+    networks:
+      - spring
+
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    build:
+      context: ./product-service
+      dockerfile: ./Dockerfile
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootadmin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    depends_on:
+      - ./data/mongo/products:/data/db
+      - ./init/mongo/docker-entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    restart: unless-stopped
+    command: mongod --auth
+    networks:
+      - spring
