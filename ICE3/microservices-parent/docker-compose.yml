@@ -1,0 +1,131 @@
+version: '3.8'
+services:
+
+  inventory-service:
+    image: inventory-service
+    ports:
+      - "8083:8083"
+    build:
+      context: ./inventory-service
+      dockerfile: ./Dockerfile
+    container_name: inventory-service-gbc
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - postgres-inventory
+    networks:
+      - spring
+
+  order-service:
+    image: order-service
+    ports:
+      - "8082:8082"
+    build:
+      context: ./order-service
+      dockerfile: ./Dockerfile
+    container_name: order-service-gbc
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - postgres-order
+    networks:
+      - spring
+
+  product-service:
+    image: product-service
+    ports:
+      - "8084:8084"
+    build:
+      context: ./product-service
+      dockerfile: ./Dockerfile
+    container_name: product-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - mongodb
+    networks:
+      - spring
+
+  postgres-inventory:
+    image: postgres
+    ports:
+      - "5434:5432"
+    container_name: postgres-inventory-gbc
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=inventory-service
+    volumes:
+      - ./data/postgres/inventory-service:/var/lib/postgresql/data
+      - ./init/postgres/inventory-service/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    networks:
+      - spring
+
+  postgres-order:
+    image: postgres
+    ports:
+      - "5433:5432"
+    container_name: postgres-order-gbc
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=order-service
+    volumes:
+      - ./data/postgres/order-service:/data/postgres
+      - ./init/postgres/order-service/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    networks:
+      - spring
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    container_name: mongodb-ice
+    build:
+      context: ./product-service
+      dockerfile: ./Dockerfile
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootadmin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - ./data/mongo/products:/data/db
+      - ./init/mongo/docker-entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    restart: unless-stopped
+    command: mongod --auth
+    networks:
+      - spring
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "8888:80"
+    container_name: pgadmin-order-gbc
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@domain.ca
+      - PGADMIN_DEFAULT_PASSWORD=password
+    restart: unless-stopped
+    networks:
+      - spring
+
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootadmin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    container_name: mongo-express-1
+    restart: unless-stopped
+    depends_on:
+        - mongodb
+    networks:
+      - spring
+
+networks:
+  spring:
+    driver: bridge
+
