@@ -7,7 +7,11 @@
 # --
 
 #base image
-FROM gradle:8-jdk17-alpine AS builder
+# Windows
+#FROM gradle:8-jdk17-alpine AS builder
+
+#MAC
+FROM gradle:8-jdk20 AS builder
 
 # Copy the application files from the host machine to the image filesystem
 COPY --chown=gradle:gradle . /home/gradle/src
@@ -24,6 +28,10 @@ RUN gradle build -x test
 
 # ----------------------------------------------------------------------------------------------------
 #Base Image
+# Windows
+#FROM openjdk:20
+
+#MAC
 FROM openjdk:20
 
 RUN mkdir /app
