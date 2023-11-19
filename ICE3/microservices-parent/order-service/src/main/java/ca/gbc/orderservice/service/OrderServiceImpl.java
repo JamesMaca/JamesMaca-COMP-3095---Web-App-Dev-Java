@@ -23,13 +23,14 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 @Transactional
-
 public class OrderServiceImpl{
 
     private final OrderRepository orderRepository;
-    private WebClient webClient;
+    private WebClient.Builder webClientBuilder;
 
-    @Value("${inventory.service.uri}")
+//    private WebClient webClient;
+
+    @Value("${inventory.service.url}")
     private String inventoryApiUri;
 
 
@@ -59,7 +60,8 @@ public class OrderServiceImpl{
                 .toList();
 
 
-        List<InventoryResponse> inventoryResponseList = webClient
+        List<InventoryResponse> inventoryResponseList = webClientBuilder
+                .build()
                 .post()
                 .uri(inventoryApiUri)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -67,6 +69,15 @@ public class OrderServiceImpl{
                 .bodyToFlux(InventoryResponse.class)
                 .collectList()
                 .block(); //block to make this synchronous
+
+//        List<InventoryResponse> inventoryResponseList = webClient
+//                .post()
+//                .uri(inventoryApiUri)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(inventoryRequests).retrieve()
+//                .bodyToFlux(InventoryResponse.class)
+//                .collectList()
+//                .block(); //block to make this synchronous
 
         assert inventoryResponseList != null;
         boolean allProductsInStock = inventoryResponseList
@@ -79,7 +90,6 @@ public class OrderServiceImpl{
             throw new RuntimeException("Not all products are in stock, cannot place order");
         }
 
-        orderRepository.save(order);
 
     }
 

@@ -1,6 +1,35 @@
 version: '3.8'
 services:
 
+  api-gateway:
+    image: api-gateway
+    ports:
+      - "8182:8182"
+    build:
+      context: ./api-gateway
+      dockerfile: ./Dockerfile
+    container_name: api-gateway
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      eureka.client.serviceUrl.defaultZone: http://discovery-service:8761/eureka/
+    depends_on:
+      - discovery-service
+    networks:
+      - spring
+
+  discovery-service:
+    image: discovery-service
+    ports:
+      - "8761:8761"
+    build:
+      context: ./discovery-service
+      dockerfile: ./Dockerfile
+    container_name: discovery-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - spring
+
   inventory-service:
     image: inventory-service
     ports:
@@ -11,8 +40,10 @@ services:
     container_name: inventory-service-gbc
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      eureka.client.serviceUrl.defaultZone: http://discovery-service:8761/eureka/
     depends_on:
       - postgres-inventory
+      - api-gateway
     networks:
       - spring
 
@@ -26,8 +57,10 @@ services:
     container_name: order-service-gbc
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      eureka.client.serviceUrl.defaultZone: http://discovery-service:8761/eureka/
     depends_on:
-      - postgres-order
+      - discovery-service
+      - api-gateway
     networks:
       - spring
 
@@ -41,8 +74,10 @@ services:
     container_name: product-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      eureka.client.serviceUrl.defaultZone: http://discovery-service:8761/eureka/
     depends_on:
       - mongodb
+      - api-gateway
     networks:
       - spring
 
@@ -108,7 +143,6 @@ services:
     restart: unless-stopped
     networks:
       - spring
-
 
   mongo-express:
     image: mongo-express

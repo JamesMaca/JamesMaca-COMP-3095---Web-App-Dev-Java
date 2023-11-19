@@ -7,7 +7,6 @@
 # --
 
 #base image
-# Windows
 FROM gradle:8-jdk17-alpine AS builder
 
 
@@ -27,14 +26,12 @@ RUN gradle build -x test
 
 # ----------------------------------------------------------------------------------------------------
 #Base Image
-# Windows
 FROM openjdk:17-alpine
 
 
 RUN mkdir /app
 
 COPY --from=builder /home/gradle/src/build/libs/*.jar /app/discovery-service.jar
-
 
 EXPOSE 8761
 

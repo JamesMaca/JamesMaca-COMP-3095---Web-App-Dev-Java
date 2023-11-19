@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.1.3"
+    id("org.springframework.boot") version "3.1.5"
     id("io.spring.dependency-management") version "1.1.3"
 }
 
@@ -19,7 +19,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:4.0.3")
+
 }
+
 
 tasks.withType<Test> {
     useJUnitPlatform()

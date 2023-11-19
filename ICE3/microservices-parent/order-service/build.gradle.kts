@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.1.3"
+	id("org.springframework.boot") version "3.1.5"
 	id("io.spring.dependency-management") version "1.1.3"
 }
 
@@ -29,10 +29,14 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	implementation("org.springframework.boot:spring-boot-starter-webflux:3.1.3")
+	implementation("org.springframework.boot:spring-boot-starter-webflux:3.1.5")
 	implementation("org.apache.httpcomponents.client5:httpclient5:5.2.1")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
+	implementation(platform("org.testcontainers:testcontainers-bom:1.18.3"))
+	testImplementation("org.testcontainers:postgresql:1.18.3")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }
 
 tasks.withType<Test> {

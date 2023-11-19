@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRequest {
+public class  OrderRequest {
 
     private List<OrderLineItemDto> orderLineItemListDto = new ArrayList<>();
 
