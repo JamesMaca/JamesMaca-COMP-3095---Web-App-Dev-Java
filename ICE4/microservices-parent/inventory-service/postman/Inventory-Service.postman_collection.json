@@ -1,0 +1,31 @@
+{
+	"info": {
+		"_postman_id": "4dbaf872-305f-4ecf-94fe-905ef12c7c23",
+		"name": "Inventory-Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29539976"
+	},
+	"item": [
+		{
+			"name": "Is in stock",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/inventory/sku_12345",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"inventory",
+						"sku_12345"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
