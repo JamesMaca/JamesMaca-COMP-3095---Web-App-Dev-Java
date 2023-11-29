@@ -1,6 +1,28 @@
 version: '3.8'
 services:
 
+  keycloak:
+    image: jboss/keycloak
+    ports:
+      - "8080:8080"
+    environment:
+      JBOSS_LOG_MANAGER_ROOT_LOGGER: DEBUG
+      DB_VENDOR: postgres
+      DB_ADDR: postgres-keycloak
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: password
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: password
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/realms/spring-boot-microservices-realm.json
+    volumes:
+      - ./realms/:/opt/jboss/keycloak/realms
+    container_name: keycloak
+    depends_on:
+      - postgres-keycloak
+    networks:
+      - spring
+
   api-gateway:
     image: api-gateway
     ports:
@@ -77,6 +99,22 @@ services:
       eureka.client.serviceUrl.defaultZone: http://discovery-service:8761/eureka/
     depends_on:
       - mongodb
+    networks:
+      - spring
+
+  postgres-keycloak:
+    container_name: postgres-keycloak
+    image: postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    ports:
+      - "5431:5432"
+    volumes:
+      - ./data/postgres/postgres-keycloak:/data/postgres
+    restart: unless-stopped
     networks:
       - spring
 

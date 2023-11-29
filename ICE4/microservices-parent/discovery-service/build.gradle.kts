@@ -19,7 +19,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:4.0.3")
-
+    implementation("org.springframework.boot:spring-boot-starter-security:3.1.5")
 }
 
 
