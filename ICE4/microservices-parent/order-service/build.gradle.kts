@@ -37,6 +37,7 @@ dependencies {
 	testImplementation("org.testcontainers:postgresql:1.18.3")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+	implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j:3.0.3")
 }
 
 tasks.withType<Test> {

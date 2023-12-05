@@ -32,7 +32,7 @@ public class OrderServiceImpl{
     private String inventoryApiUri;
 
 
-    public void placeOrder(OrderRequest orderRequest) {
+    public String placeOrder(OrderRequest orderRequest) {
 
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
@@ -75,6 +75,7 @@ public class OrderServiceImpl{
 
         if(Boolean.TRUE.equals(allProductsInStock)){
             orderRepository.save(order);
+            return "Order Placed";
         }else{
             throw new RuntimeException("Not all products are in stock, cannot place order");
         }
