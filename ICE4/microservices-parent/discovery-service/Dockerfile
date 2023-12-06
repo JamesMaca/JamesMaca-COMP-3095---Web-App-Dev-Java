@@ -28,7 +28,6 @@ RUN gradle build -x test
 #Base Image
 FROM openjdk:17-alpine
 
-
 RUN mkdir /app
 
 COPY --from=builder /home/gradle/src/build/libs/*.jar /app/discovery-service.jar
