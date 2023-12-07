@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class  OrderRequest {
 
-    private List<OrderLineItemDto> orderLineItemListDto = new ArrayList<>();
+    private List<OrderLineItemDto> orderLineItemDtoList = new ArrayList<>();
 
 }

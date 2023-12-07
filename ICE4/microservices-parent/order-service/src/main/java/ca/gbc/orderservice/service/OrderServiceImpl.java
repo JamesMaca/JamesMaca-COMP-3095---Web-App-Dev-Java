@@ -23,27 +23,28 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class OrderServiceImpl{
+public class OrderServiceImpl implements OrderService{
 
     private final OrderRepository orderRepository;
-    private WebClient.Builder webClientBuilder;
+    private final WebClient.Builder webClientBuilder;
 
     @Value("${inventory.service.url}")
     private String inventoryApiUri;
 
 
+    @Override
     public String placeOrder(OrderRequest orderRequest) {
 
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
 
-        List<OrderLineItem> orderLineItems = orderRequest
-                .getOrderLineItemListDto()
+        List<OrderLineItem> orderLineItemsList = orderRequest
+                .getOrderLineItemDtoList()
                 .stream()
-                .map(this::mapToDto)
+                .map(this::mapToModel)
                 .toList();
 
-        order.setOrderLineItemList(orderLineItems);
+        order.setOrderLineItemList(orderLineItemsList);
 
 
 
@@ -62,7 +63,8 @@ public class OrderServiceImpl{
                 .post()
                 .uri(inventoryApiUri)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(inventoryRequests).retrieve()
+                .bodyValue(inventoryRequests)
+                .retrieve()
                 .bodyToFlux(InventoryResponse.class)
                 .collectList()
                 .block(); //block to make this synchronous
@@ -75,7 +77,7 @@ public class OrderServiceImpl{
 
         if(Boolean.TRUE.equals(allProductsInStock)){
             orderRepository.save(order);
-            return "Order Placed";
+            return "Order Placed Successfully";
         }else{
             throw new RuntimeException("Not all products are in stock, cannot place order");
         }
@@ -83,7 +85,7 @@ public class OrderServiceImpl{
 
     }
 
-    private OrderLineItem mapToDto(OrderLineItemDto orderLineItemDto) {
+    private OrderLineItem mapToModel(OrderLineItemDto orderLineItemDto) {
         OrderLineItem orderLineItem = new OrderLineItem();
         orderLineItem.setPrice(orderLineItemDto.getPrice());
         orderLineItem.setQuantity(orderLineItemDto.getQuantity());

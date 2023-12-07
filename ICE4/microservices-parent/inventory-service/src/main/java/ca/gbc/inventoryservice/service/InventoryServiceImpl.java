@@ -19,16 +19,17 @@ public class InventoryServiceImpl implements InventoryService{
 
     private final InventoryRepository inventoryRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    @SneakyThrows
+//    @Override
+//    @Transactional(readOnly = true)
+    @Transactional
+//    @SneakyThrows
     public List<InventoryResponse> isInStock(List<InventoryRequest> requests) {
 
-        log.info("Wait started");
-        Thread.sleep(10000);
-        log.info("Wait sleep");
+//        log.info("Wait started");
+//        Thread.sleep(10000);
+//        log.info("Wait sleep");
 
-        List<Inventory> availableInventory = inventoryRepository.findAllByInventoryRequests(requests);
+        List<Inventory> availableInventory = inventoryRepository.findByAllInventoryRequests(requests);
 
         return requests.stream().map(request -> {
 

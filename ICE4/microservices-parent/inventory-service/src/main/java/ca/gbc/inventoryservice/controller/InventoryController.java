@@ -2,10 +2,7 @@ package ca.gbc.inventoryservice.controller;
 
 import ca.gbc.inventoryservice.dto.InventoryRequest;
 import ca.gbc.inventoryservice.dto.InventoryResponse;
-import ca.gbc.inventoryservice.model.Inventory;
-import ca.gbc.inventoryservice.repository.InventoryRepository;
 import ca.gbc.inventoryservice.service.InventoryServiceImpl;
-import jakarta.persistence.GeneratedValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +18,7 @@ public class InventoryController {
 
 //    @GetMapping("/{sku-code}")
 //    @ResponseStatus(HttpStatus.OK)
-//    public boolean isInStock(@PathVariable("sku-code") String skuCode){
+//    public List<InventoryResponse> isInStock(@PathVariable("sku-code") List<InventoryRequest> skuCode){
 //        return inventoryService.isInStock(skuCode);
 //    }
 

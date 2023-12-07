@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public interface InventoryRepository extends JpaRepository<Inventory, Long> {
+public interface InventoryRepository extends JpaRepository<Inventory, Long>{
 
     Optional<Inventory> findBySkuCode(String skuCode);
 
@@ -19,7 +19,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     @Query("SELECT i FROM Inventory i WHERE i.skuCode = :skuCode AND i.quantity >= :quantity")
     List<Inventory> findBySkuCodeAndQuantity(String skuCode, Integer quantity);
 
-    default List<Inventory> findAllByInventoryRequests(List<InventoryRequest> inventoryRequests){
+    default List<Inventory> findByAllInventoryRequests(List<InventoryRequest> inventoryRequests){
         return inventoryRequests.stream()
                 .flatMap(request -> findBySkuCodeAndQuantity(request.getSkuCode(), request.getQuantity()).stream())
                 .collect(Collectors.toList());

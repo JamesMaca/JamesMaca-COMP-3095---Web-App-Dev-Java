@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface InventoryService {
 
+//    List<InventoryResponse> isInStock(String requests);
     List<InventoryResponse> isInStock(List<InventoryRequest> requests);
 
 
