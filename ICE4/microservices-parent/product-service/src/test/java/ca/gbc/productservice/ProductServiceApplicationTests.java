@@ -33,7 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ProductServiceApplicationTests extends AbstractContainerBaseTest{
+class
+ProductServiceApplicationTests extends AbstractContainerBaseTest{
 
     @Autowired
     private MockMvc mockMvc; //component of the test spring framework
