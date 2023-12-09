@@ -1,6 +1,17 @@
 version: '3.8'
 services:
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    restart: unless-stopped
+    ports:
+      - "9411:9411"
+    container_name: zipkin-ICE4
+    depends_on:
+      - api-gateway
+    networks:
+      - spring
+
   keycloak:
     image: jboss/keycloak
     ports:
